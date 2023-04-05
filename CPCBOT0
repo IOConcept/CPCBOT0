@@ -1,0 +1,36 @@
+  import json
+import os
+
+# Set the paths for input and output files
+input_path = "C:\\Users\\Eric\\Documents\\GitHub\\CPCCOMMS\\CPCCOMMS.json"
+output_path = "C:\\Users\\Eric\\PycharmProjects\\CPCTABLEBOT\\PENDING.json"
+
+# Check if the input file exists
+if os.path.exists(input_path):
+    # Load the contents of the input file
+    with open(input_path, "r") as f:
+        data = json.load(f)
+        print("File imported successfully.")
+else:
+    print("Input file does not exist.")
+    exit()
+
+# Extract the relevant data from the input file and save it to the output file
+pending_data = []
+for message in data:
+    # Check if the message has the correct format
+    if "%message%" in message["message"] and "%format%" in message["message"]:
+        # Replace the placeholders with the actual message and format
+        message_text = message["message"].replace("%message%", "").replace("%format%", "")
+        message_format = message["response"].replace("Message received: ", "").replace("%message%", "").replace("%format%", "")
+        pending_data.append({"message": message_text, "format": message_format})
+
+# Check if any messages were extracted
+if len(pending_data) == 0:
+    print("No messages found in input file.")
+else:
+    # Save the pending data to the output file
+    with open(output_path, "w") as f:
+        json.dump(pending_data, f)
+        print("File exported successfully.")
+    print("Pending file saved successfully.")
